@@ -1,0 +1,203 @@
+---
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: "Hello World App"
+host: "localhost:10010"
+basePath: "/"
+schemes:
+- "http"
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /hello:
+    get:
+      description: "Returns 'Hello' to the caller"
+      operationId: "hello"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the person to whom to say hello"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/HelloWorldResponse"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "Default"
+    x-swagger-router-controller: "hello_world"
+  /movie:
+    get:
+      description: "get the movies list"
+      operationId: "getAll"
+      parameters: []
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/GetMoviesListResponse"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "Default"
+    post:
+      description: "add a new movie to the list"
+      operationId: "save"
+      parameters:
+      - in: "body"
+        name: "title"
+        description: "Movie properties"
+        required: true
+        schema:
+          $ref: "#/definitions/Movie"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "Default"
+    x-swagger-router-controller: "movie"
+  /movie/{id}:
+    get:
+      description: "get a movie"
+      operationId: "getOne"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/GetMovieResponse"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "Default"
+    put:
+      description: "update a movie"
+      operationId: "update"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Movie id"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "title"
+        description: "Movie properties"
+        required: true
+        schema:
+          $ref: "#/definitions/Movie"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "Default"
+    delete:
+      description: "delete a movie"
+      operationId: "delMovie"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Movie id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "Default"
+    x-swagger-router-controller: "movie"
+  /swagger:
+    x-swagger-pipe: "swagger_raw"
+definitions:
+  GetMoviesListResponse:
+    required:
+    - "movies"
+    properties:
+      movies:
+        type: "array"
+        items:
+          $ref: "#/definitions/GetMoviesListResponse_movies"
+  GeneralResponse:
+    type: "object"
+    required:
+    - "description"
+    - "success"
+    properties:
+      success:
+        type: "number"
+        description: "returns 1 if successful"
+      description:
+        type: "string"
+        description: "a short comment"
+  Movie:
+    type: "object"
+    required:
+    - "title"
+    - "year"
+    properties:
+      title:
+        type: "string"
+        description: "task object name"
+      year:
+        type: "number"
+        description: "task description"
+  GetMovieResponse:
+    required:
+    - "id"
+    - "title"
+    - "year"
+    properties:
+      id:
+        type: "string"
+      title:
+        type: "string"
+      year:
+        type: "number"
+  HelloWorldResponse:
+    required:
+    - "message"
+    properties:
+      message:
+        type: "string"
+  ErrorResponse:
+    required:
+    - "message"
+    properties:
+      message:
+        type: "string"
+  GetMoviesListResponse_movies:
+    properties:
+      id:
+        type: "string"
+      title:
+        type: "string"
+      year:
+        type: "number"
